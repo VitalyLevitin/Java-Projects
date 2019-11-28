@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 
@@ -58,28 +59,40 @@ public class DeckofCards {
 
     public void fight(Card player1, Card player2, DeckofCards player1Deck, DeckofCards player2Deck, ArrayList<Card> pool) {
         if(player1Deck.isEmpty() && player2Deck.isEmpty()){
+            JOptionPane.showMessageDialog(null, "Both players decks are empty" +
+                    "\n<html><h1><u><font color=red>Game is a draw</font><u></h1></html>", "Everyone won(yay)",JOptionPane.PLAIN_MESSAGE);
             System.out.println("draw");
             return;
         }
         if (player1.getStrength() > player2.getStrength()) {
             if(player2Deck.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Player's 2 deck is empty." +
+                        "\n<html><h1><u><font color=red>Player 1 has won the game!</font><u></h1></html>", "Player 1 won",JOptionPane.PLAIN_MESSAGE);
                 System.out.println("p1 game winner");
                 return;
             }
             if(!pool.isEmpty()) player1Deck.collect(pool);
+            JOptionPane.showMessageDialog(null, "Player 1 has "+ player1 + "\nPlayer 2 has " + player2
+                    + "\n<html><h1><u><font color=red>Player 1 won the round</font><u></h1></html>", "Player 1 won",JOptionPane.PLAIN_MESSAGE);
             System.out.println("p1 round winner");
             return;
         }
         else if (player2.getStrength() > player1.getStrength()) {
             if (player1Deck.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Player's 1 deck is empty." +
+                        "\n<html><h1><u><font color=red>Player 2 has won the game!</font><u></h1></html>", "Player 2 won",JOptionPane.PLAIN_MESSAGE);
                 System.out.println("p2 game winner");
                 return;
             }
             if(!pool.isEmpty()) player2Deck.collect(pool);
+            JOptionPane.showMessageDialog(null, "Player 1 has "+ player1 + "\nPlayer 2 has " + player2
+                    + "\n<html><h1><u><font color=red>Player 2 won the round</font><u></h1></html>", "Player 2 won",JOptionPane.PLAIN_MESSAGE);
             System.out.println("p2 round winner");
             return;
         }
         else
+            JOptionPane.showMessageDialog(null, "Player 1 has "+ player1 + "\nPlayer 2 has " + player2
+                    + "\n<html><h1><u><font color=red>It's war time</font><u></h1></html>", "WAR",JOptionPane.PLAIN_MESSAGE);
             System.out.println("WAR");
             for (int i = 0; i < 3; i++) {
                 if(!player1Deck.isEmpty()) pool.add(player1 = player1Deck.placeCard());
