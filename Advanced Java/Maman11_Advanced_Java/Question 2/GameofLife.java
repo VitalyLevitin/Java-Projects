@@ -11,6 +11,14 @@ public class GameofLife {
         randomize((mainMatrix));
     }
 
+    public static int getArraySize() {
+        return arraySize;
+    }
+
+    public boolean getCordinates(int x, int y) {
+        return mainMatrix[x][y];
+    }
+
     public void randomize(boolean[][] matrix){
         for (int i = 0; i < arraySize; i++) {
             for (int j = 0; j < arraySize; j++) {
@@ -26,8 +34,13 @@ public class GameofLife {
                 lifeOrDeath(i,j,neighbours);
             }
         }
-
-
+    }
+    public void swap() {
+        for (int i = 0; i < arraySize; i++) {
+            for (int j = 0; j < arraySize; j++) {
+                mainMatrix[i][j] = secondaryMatrix[i][j];
+            }
+        }
     }
 
     private int neighbourCount(int x, int y){
