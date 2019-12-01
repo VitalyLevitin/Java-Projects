@@ -1,7 +1,8 @@
 public class Card {
-    private final String face; // Face of cards (Ace, Deuce ....)
-    private final String suit; // Suit of cards (Hearts, Diamonds ....)
-    private int strength = 0;
+    private final String face;
+    private final String suit;
+    private int strength; //Setting Strength so we could compare between the cards.
+    //Ace is the strongest and Deuce is the weakest. (Suit has no impact)
 
     public Card(String cardFace, String cardSuit, int cardStrength) {
         face = cardFace;

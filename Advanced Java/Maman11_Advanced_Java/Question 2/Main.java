@@ -8,7 +8,7 @@ public class Main {
         View_GameofLife matrix = new View_GameofLife();
         frame.add(matrix);
         frame.setVisible(true);
-        matrix.sprout();
+        matrix.sprout();//Creates life as we know it. Will close itself once the user clicks no.
     }
 
 }
