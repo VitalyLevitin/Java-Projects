@@ -23,7 +23,7 @@ public class DeckofCards {
         shuffle(deck);
     }
 
-    public void shuffle(ArrayList<Card> deck) {
+    private void shuffle(ArrayList<Card> deck) {
         for(Card card:deck) {//Randomly swaping places between cards in the deck.
             Card randomCard = deck.get(randomNumbers.nextInt(deck.size()));
             int currentIndex = deck.indexOf(card);
@@ -44,7 +44,7 @@ public class DeckofCards {
         }
         deck.clear();
     }
-    public void addCard(Card card) {
+    private void addCard(Card card) {
         deck.add(card);
     }
     public Card placeCard() {
@@ -53,11 +53,8 @@ public class DeckofCards {
         return null;
     }
 
-    /**
-     * Adds the current pool to the winning player and clears the pool(deck).
-     * @param pool the currect deck pool between the players.
-     */
-    public void collect(ArrayList<Card> pool){
+    //Adds the current pool to the winning player and clears the pool(deck).
+    private void collect(ArrayList<Card> pool){
         shuffle(pool);
         deck.addAll(pool);
         pool.clear();
