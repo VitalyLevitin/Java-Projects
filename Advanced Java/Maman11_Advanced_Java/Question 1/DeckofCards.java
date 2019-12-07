@@ -81,26 +81,30 @@ public class DeckofCards {
         if (player1.getStrength() > player2.getStrength()) {
             if(player2Deck.isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Player's 2 deck is empty." +
-                        "\n<html><h1><u><font color=blue>Player 1 has won the game!</font><u></h1></html>", "Player 1 won",JOptionPane.PLAIN_MESSAGE);
+                        "\n<html><h1><u><font color=blue>Player 1 has won the game!</font><u></h1></html>",
+                        "Player 1 won",JOptionPane.PLAIN_MESSAGE);
                 return;
             }
             if(!pool.isEmpty()) player1Deck.collect(pool);
             else{
                 JOptionPane.showMessageDialog(null, "Player 1 has "+ player1 + "\nPlayer 2 has " + player2
-                        + "\n<html><h1><u><font color=blue>Player 1 won the round</font><u></h1></html>", "Player 1 won",JOptionPane.PLAIN_MESSAGE);
+                        + "\n<html><h1><u><font color=blue>Player 1 won the round</font><u></h1></html>",
+                        "Player 1 won",JOptionPane.PLAIN_MESSAGE);
             }
             return;
         }
         else if (player2.getStrength() > player1.getStrength()) {
             if (player1Deck.isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Player's 1 deck is empty." +
-                        "\n<html><h1><u><font color=green>Player 2 has won the game!</font><u></h1></html>", "Player 2 won",JOptionPane.PLAIN_MESSAGE);
+                        "\n<html><h1><u><font color=green>Player 2 has won the game!</font><u></h1></html>",
+                        "Player 2 won",JOptionPane.PLAIN_MESSAGE);
                 return;
             }
             if(!pool.isEmpty()) player2Deck.collect(pool);
             else {
                 JOptionPane.showMessageDialog(null, "Player 1 has "+ player1 + "\nPlayer 2 has " + player2
-                        + "\n<html><h1><u><font color=green>Player 2 won the round</font><u></h1></html>", "Player 2 won",JOptionPane.PLAIN_MESSAGE);
+                        + "\n<html><h1><u><font color=green>Player 2 won the round</font><u></h1></html>",
+                        "Player 2 won",JOptionPane.PLAIN_MESSAGE);
             }
             return;
         }

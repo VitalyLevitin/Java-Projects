@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 
 public class Polynom {
@@ -8,23 +7,43 @@ public class Polynom {
         polynom = new ArrayList<>();
     }
     public Polynom(double[] coefficient, int[] exponent) {
+        if(exponent.length != coefficient.length)
+            throw new IllegalArgumentException("The power array must be equal to the coefficient array");
         polynom = new ArrayList<>();
         for (int i = 0; i < coefficient.length; i++)
             polynom.add(i, new Monomial(coefficient[i], exponent[i]));
         Collections.sort(polynom);
-        merge();
+        merge(true);
     }
-
-    public void merge() {
-        for (int i = 0; i < polynom.size() - 1; i++) {
-            if (compare(i)) {
-                double coefficient = polynom.get(i).getCoefficient() + polynom.get(i + 1).getCoefficient();
-                int exponent = polynom.get(i).getExponent();
-                polynom.remove(i);
-                polynom.remove(i);
-                polynom.add(i, new Monomial(coefficient, exponent));
+    private void merge(boolean plus){
+        if(plus) {
+            for (int i = 0; i < polynom.size() - 1; i++) {
+                if (compare(i)) {
+                    double coefficient = polynom.get(i).getCoefficient() + polynom.get(i + 1).getCoefficient();
+                    int exponent = polynom.get(i).getExponent();
+                    remove(i, coefficient, exponent);
+                }
             }
         }
+        else
+        {
+            for (int i = 0; i < polynom.size() - 1; i++) {
+                if (compare(i)) {
+                    double coefficient = polynom.get(i).getCoefficient() - polynom.get(i + 1).getCoefficient();
+                    int exponent = polynom.get(i).getExponent();
+                    remove(i, coefficient, exponent);
+                    if(coefficient==0) plus = false;
+                }
+            }
+        }
+        if (!plus)
+            polynom.clear();
+    }
+
+    private void remove(int i, double coefficient, int exponent) {
+        polynom.remove(i);
+        polynom.remove(i);
+        polynom.add(i, new Monomial(coefficient, exponent));
     }
 
     private boolean compare(int i) {
@@ -51,51 +70,30 @@ public class Polynom {
     private Monomial get(int i) { return polynom.get(i);}
 
     public Polynom addition (Polynom poly){
-        int j = 0;
-        for (int i = 0; i < polynom.size(); i++) {
-            for (; j < poly.getSize();j++) {
-                if (poly.get(j).getExponent() < polynom.get(i).getExponent()) {
-                    j = i;
-                    break;
-                }
-                else if (poly.get(j).getExponent() == polynom.get(i).getExponent()) {
-                    double coefficient = polynom.get(i).getCoefficient() + poly.get(j).getCoefficient();
-                    int exponent = polynom.get(i).getExponent();
-                    polynom.remove(i);
-                    polynom.add(i, new Monomial(coefficient, exponent));
-                }
-                else if(polynom.get(i-1).getExponent()!= poly.get(j).getExponent()){
-                    double coefficient = poly.get(j).getCoefficient();
-                    int exponent = poly.get(j).getExponent();
-                    polynom.add(i, new Monomial(coefficient, exponent));
-                }
-            }
+        Polynom mergedPoly = new Polynom();
+        stack(polynom,poly,mergedPoly);
+        mergedPoly.merge(true);
+        return mergedPoly;
+    }
+    private void stack(ArrayList<Monomial> polynom, Polynom poly, Polynom mergedPoly){
+        for (int j = 0; j < polynom.size(); j++) {
+            mergedPoly.polynom.add(new Monomial(polynom.get(j).getCoefficient(),polynom.get(j).getExponent()));
         }
-        return poly;
+        for (int j = 0; j < poly.getSize(); j++) {
+            addPoly(poly.polynom.get(j).getCoefficient(),poly.polynom.get(j).getExponent(),mergedPoly);
+        }
+        Collections.sort((mergedPoly.polynom));
+    }
+
+    private void addPoly(double coefficient, int exponent, Polynom mergedPoly){
+        mergedPoly.polynom.add(new Monomial(coefficient, exponent));
     }
 
     public Polynom subtract (Polynom poly){
-        int j = 0;
-        for (int i = 0; i < polynom.size(); i++) {
-            for (; j < poly.getSize();j++) {
-                if (poly.get(j).getExponent() < polynom.get(i).getExponent()) {
-                    j = i;
-                    break;
-                }
-                else if (poly.get(j).getExponent() == polynom.get(i).getExponent()) {
-                    double coefficient = polynom.get(i).getCoefficient() - poly.get(j).getCoefficient();
-                    int exponent = polynom.get(i).getExponent();
-                    polynom.remove(i);
-                    polynom.add(i, new Monomial(coefficient, exponent));
-                }
-                else if(polynom.get(i-1).getExponent()!= poly.get(j).getExponent()){
-                    double coefficient = poly.get(j).getCoefficient();
-                    int exponent = poly.get(j).getExponent();
-                    polynom.add(i, new Monomial(coefficient, exponent));
-                }
-            }
-        }
-        return poly;
+        Polynom mergedPoly = new Polynom();
+        stack(polynom,poly,mergedPoly);
+        mergedPoly.merge(false);
+        return mergedPoly;
     }
 
     public Polynom differentiation(){
