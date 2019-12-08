@@ -1,5 +1,10 @@
 import java.util.Scanner;
 
+/**
+ * This class recieves two Polynomials and implementes various calculating methods.
+ *
+ * @author Vitaly Levitin.
+ */
 public class Main {
     public static void main(String[] args) {
         Scanner scan = new Scanner(System.in);
@@ -7,7 +12,7 @@ public class Main {
         int size = scan.nextInt();
         double[] firstPolyCoefficients = new double[size];
         int[] firstPolyExponents = new int[size];
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < size; i++) {//Setting the first Polynomial variables.
             System.out.println("Please enter the coefficient");
             firstPolyCoefficients[i] = scan.nextDouble();
             System.out.println("Please enter the responding exponent");
@@ -18,7 +23,7 @@ public class Main {
         size = scan.nextInt();
         double[] secondPolyCoefficients = new double[size];
         int[] secondPolyExponents = new int[size];
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < size; i++) {//Setting the second Polynomial variables.
             System.out.println("Please enter the coefficient");
             secondPolyCoefficients[i] = scan.nextDouble();
             System.out.println("Please enter the responding exponent");

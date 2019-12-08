@@ -1,26 +1,22 @@
 public class Monomial implements Comparable<Monomial>{
     private double coefficient;
     int exponent;
+
     public Monomial(double coefficient, int exponent){
         this.coefficient = coefficient;
         this.exponent= exponent;
     }
+
     public double getCoefficient(){return coefficient;}
 
-    public int getExponent() {
-        return exponent;
-    }
+    public int getExponent() { return exponent; }
 
-    public void setCoefficient(double coefficient) {
-        this.coefficient = coefficient;
-    }
+    public void setCoefficient(double coefficient) { this.coefficient = coefficient; }
 
-    public void setExponent(int exponent) {
-        this.exponent = exponent;
-    }
+    public void setExponent(int exponent) { this.exponent = exponent; }
 
     @Override
-    public int compareTo(Monomial o) {
+    public int compareTo(Monomial o) {//Returns which Monomial is bigger.
         if(this.exponent < o.exponent)
             return 1;
         else return -1;
@@ -38,6 +34,6 @@ public class Monomial implements Comparable<Monomial>{
         else
             return String.format("%+.1fx^%d", getCoefficient(), getExponent()); // x^y
     }
-    }
+}
 
 
