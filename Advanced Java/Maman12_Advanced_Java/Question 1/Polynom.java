@@ -17,23 +17,27 @@ public class Polynom {
     }
     private void merge(boolean plus){
         if(plus) {
-            for (int i = 0; i < polynom.size() - 1; i++) {
+            for (int i = 0; i < polynom.size() - 1;) {
                 if (compare(i)) {
                     double coefficient = polynom.get(i).getCoefficient() + polynom.get(i + 1).getCoefficient();
                     int exponent = polynom.get(i).getExponent();
                     remove(i, coefficient, exponent);
                 }
+                else
+                    i++;
             }
         }
         else
         {
-            for (int i = 0; i < polynom.size() - 1; i++) {
+            for (int i = 0; i < polynom.size() - 1;) {
                 if (compare(i)) {
                     double coefficient = polynom.get(i).getCoefficient() - polynom.get(i + 1).getCoefficient();
                     int exponent = polynom.get(i).getExponent();
                     remove(i, coefficient, exponent);
                     if(coefficient==0) plus = false;
                 }
+                else
+                    i++;
             }
         }
         if (!plus)
