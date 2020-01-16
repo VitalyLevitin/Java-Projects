@@ -19,42 +19,50 @@ public class Phonebook implements Serializable {
         return contact;
     }
 
-    public void setValue(String key, String newKey, String number){
-        if(contact.containsKey(key)){
-            contact.remove(key);
-            contact.put(newKey, new Contact(newKey, number));
-        }
+    public void removePhonebook(){
+        contact.clear();
     }
 
-    public boolean addContact (Contact details){
-        if(!contact.containsKey(details.getName())) {
+    public boolean addContact (Contact details) throws AlreadyExistsContactException, IlegalPhoneNumberException {
+        if(contact.containsKey(details.getName())) {
+            throw new AlreadyExistsContactException(details.getName() + " already exists");
+        }
+        else if(!details.isNumber(details.getNumber())){
+            throw new IlegalPhoneNumberException("Phone number must contain 10 digits");
+        }
+        else {
             contact.put(details.getName(), details);
             return true;
         }
-        else {
-            System.out.println("Already there");
-            return false;
-        }
     }
 
-    public void removeContact(Contact details){
+    public void removeContact(Contact details) throws DoesNotExistContactException {
         if(!contact.containsKey(details.getName()))
-            System.out.println("No contact");
+            throw new DoesNotExistContactException(details.getName() + " does not exists");
         else
             contact.remove(details.getName());
     }
 
-    public void updateContact(Contact details){
-        this.contact.put(details.getName(), new Contact(details.getName(),details.getNumber()));
-    }
+    public boolean updateContact(Contact details, String oldName) throws DoesNotExistContactException, IlegalPhoneNumberException, AlreadyExistsContactException {
+        if(!myMap().containsKey(oldName)){
+            throw new DoesNotExistContactException(details.getName() + " does not exists");
+            }
+        if(!details.isNumber(details.getNumber()))
+            throw new IlegalPhoneNumberException("Phone number must contain 10 digits");
+        removeContact(new Contact(oldName, myMap().get(oldName).getNumber()));
+        boolean status = addContact(new Contact(details.getName(), details.getNumber()));
+        return status;
+        }
 
+    public boolean searchContact(Contact details) throws DoesNotExistContactException {
+        if(details.getName().compareTo("")==0 ||!myMap().containsKey(details.getName())){
+            throw new DoesNotExistContactException(details.getName() + " does not exists");
+        }
+        else if(!myMap().containsValue(details.getNumber())){
+            throw new DoesNotExistContactException(details.getNumber() + " does not exists");
+        }
+        return true;
+    }
     public int size(){return contact.size();}
 
-//    public Contact getContact(int index){
-//        return contact.
-//    }
-
-    public String contactName(Object obj){
-        return contact.get(obj).getName();
-    }
 }
