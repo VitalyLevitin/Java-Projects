@@ -1,9 +1,10 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class Phonebook {
+public class Phonebook implements Serializable {
     private Map <String, Contact> contact;
 
     public Phonebook() {
@@ -12,6 +13,17 @@ public class Phonebook {
                 return a.toLowerCase().compareTo(b.toLowerCase());
             }
         });
+    }
+
+    public Map <String, Contact> myMap(){
+        return contact;
+    }
+
+    public void setValue(String key, String newKey, String number){
+        if(contact.containsKey(key)){
+            contact.remove(key);
+            contact.put(newKey, new Contact(newKey, number));
+        }
     }
 
     public boolean addContact (Contact details){
@@ -29,7 +41,7 @@ public class Phonebook {
         if(!contact.containsKey(details.getName()))
             System.out.println("No contact");
         else
-            contact.remove(details);
+            contact.remove(details.getName());
     }
 
     public void updateContact(Contact details){

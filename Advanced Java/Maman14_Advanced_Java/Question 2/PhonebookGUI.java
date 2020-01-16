@@ -1,6 +1,10 @@
 
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
@@ -9,11 +13,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Map;
 
-public class PhonebookGUI extends JFrame implements Serializable {
+public class PhonebookGUI extends JFrame {
     private JTable table;
     private JScrollPane pane;
     private JButton addBtn, removeBtn, updateBtn, loadBtn, saveBtn;
@@ -28,7 +31,7 @@ public class PhonebookGUI extends JFrame implements Serializable {
 
     private void initComponents() {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        final DefaultTableModel model = new DefaultTableModel(){
+        final DefaultTableModel model = new DefaultTableModel() {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
@@ -57,46 +60,77 @@ public class PhonebookGUI extends JFrame implements Serializable {
         north.add(updateBtn);
         north.add(addBtn);
         north.add(removeBtn);
-        getContentPane().add(north,BorderLayout.NORTH);
+        getContentPane().add(north, BorderLayout.NORTH);
         addBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String name = nameText.getText();
                 String phone = phoneText.getText();
                 Contact contact = new Contact(name, phone);
-                try{
+                try {
                     boolean action = phonebook.addContact(contact);
-                    if(action) {
+                    if (action) {
                         model.addRow(new Object[]{name, phone});
                         model.fireTableDataChanged();
                     }
-                }
-                catch(Exception err) {
+                } catch (Exception err) {
                     System.out.println("Fuck");
                 }
             }
         });
-        table.addMouseListener(new MouseAdapter() {
+        removeBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String name = nameText.getText();
+                String phone = phoneText.getText();
+                Contact contact = new Contact(name, phone);
+                try{
+                    int indexToRemove = removeRow(name);
+                    phonebook.removeContact(contact);
+                    if(indexToRemove !=-1)
+                        model.removeRow(indexToRemove);
+                    model.fireTableDataChanged();
+                }
+                catch (Exception err) {
+                    System.out.println("blyat");
+                }
+            }
+        });
+        table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if(table.getSelectedRow()<0){
+                    nameText.setText(null);
+                    phoneText.setText(null);
+                }
+                else {
+                    nameText.setText(phonebook.myMap().get(table.getValueAt(table.getSelectedRow(), 0).toString()).getName());
+                    phoneText.setText(phonebook.myMap().get(table.getValueAt(table.getSelectedRow(), 0).toString()).getNumber());
+                }
+            }
+        });
+/*        table.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                nameText.setText(table.getModel().getValueAt(table.getSelectedRow(), 0).toString());
-                phoneText.setText(table.getModel().getValueAt(table.getSelectedRow(), 1).toString());
-                sorter.sort();
+                nameText.setText(phonebook.myMap().get(table.getValueAt(table.getSelectedRow(),0).toString()).getName());
+                phoneText.setText(phonebook.myMap().get(table.getValueAt(table.getSelectedRow(),0).toString()).getNumber());
 
             }
-        });
+        });*/
 
         //Initialize JTable.
         model.addColumn("Name");
         model.addColumn("Number");
         pane.setViewportView(table);
-        getContentPane().add(pane,BorderLayout.CENTER);
+        table.setRowSelectionAllowed(true);
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        getContentPane().add(pane, BorderLayout.CENTER);
 
+        //Sorting the JTable keys.
         sorter = new TableRowSorter<>(table.getModel());
         table.setRowSorter(sorter);
         ArrayList<RowSorter.SortKey> sortKeys = new ArrayList<>();
-//        sortKeys.add(new RowSorter.SortKey(4, SortOrder.ASCENDING));
         sortKeys.add(new RowSorter.SortKey(0, SortOrder.ASCENDING));
         sorter.setSortKeys(sortKeys);
 
@@ -111,16 +145,33 @@ public class PhonebookGUI extends JFrame implements Serializable {
         south.setLayout(new GridLayout());
         south.add(loadBtn);
         south.add(saveBtn);
-        getContentPane().add(south,BorderLayout.PAGE_END);
+        getContentPane().add(south, BorderLayout.PAGE_END);
         pack();
 
     }
 
+//    private void rearrangeMap() {
+//        sorter.sort();
+//        int i = 0;
+//        for (Map.Entry<String, Contact> entry : phonebook.myMap().entrySet()) {
+//            table.setValueAt(entry.getKey(), i, 0);
+//            table.setValueAt(entry.getValue().getNumber(), i, 1);
+//            i++;
+//
+//        }
+    private int removeRow(String name){
+        for (int i = 0; i < phonebook.size(); i++) {
+            if(name.compareTo(table.getValueAt(i,0).toString())==0)
+                return i;
+        }
+        return -1;
+    }
+
     public static void main(String[] args) {
-        try{
+        try {
             for (UIManager.LookAndFeelInfo info :
                     UIManager.getInstalledLookAndFeels()) {
-                if("Nimbus".equals(info.getName())){
+                if ("Nimbus".equals(info.getName())) {
                     UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
