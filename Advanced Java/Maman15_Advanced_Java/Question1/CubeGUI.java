@@ -1,13 +1,16 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class CubeGUI extends JFrame {
-    private myButton [][]btnArray;
-    private JPanel center, south, north;
-    private JButton start, restart, update;
+    private JButton [][]btnArray;
+    private JPanel center, south, north, tabs;
+    private JButton startBtn, restartBtn, updateBtn;
     private JTextField numOfElementsText, numOfThreadsText, numOfPassesText;
     private int numOfElements, numOfThreads, numOfPasses;
+    ControlListener controlPanel;
 
     private JLabel ele, thread, pass;
     public CubeGUI(){
@@ -26,14 +29,17 @@ public class CubeGUI extends JFrame {
         ele = new JLabel(" Please enter the grid size: ");
         thread = new JLabel(" Please enter how many threads: ");
         pass = new JLabel(" Please enter how much passes: ");
-        update = new JButton("Update");
-        start = new JButton("Start");
-        restart = new JButton("Restart");
+        updateBtn = new JButton("Update");
+        startBtn = new JButton("Start");
+        restartBtn = new JButton("Restart");
+        controlPanel = new ControlListener();
+        updateBtn.addActionListener(controlPanel);
+        startBtn.addActionListener(controlPanel);
+        restartBtn.addActionListener(controlPanel);
 
 
         //Listeners
-        ControlListener controlPanel = new ControlListener();
-        MouseListener mousePanel = new MouseListener();
+        //MouseListener mousePanel = new MouseListener();
 
         //Default values
         numOfElementsText.setText(Integer.toString(numOfElements = 20));
@@ -47,23 +53,15 @@ public class CubeGUI extends JFrame {
         north.add(numOfThreadsText);
         north.add(pass);
         north.add(numOfPassesText);
-        north.add(update);
+        north.add(updateBtn);
 
-        //Center Panel.
-        center = new JPanel(new GridLayout(numOfElements,numOfElements));
-        btnArray = new myButton[numOfElements][numOfElements];
-        for (int i = 0; i < numOfElements; i++) {
-            for (int j = 0; j < numOfElements; j++) {
-                btnArray[i][j] = new myButton(i,j);
-                btnArray[i][j].addMouseListener(mousePanel);
-                center.add(btnArray[i][j]);
-            }
-        }
 
+//        Center Panel.
+        centerPanel();
 
         //South Panel.
-        south.add(start);
-        south.add(restart);
+        south.add(startBtn);
+        south.add(restartBtn);
 
 
         //Main Panel.
@@ -71,28 +69,53 @@ public class CubeGUI extends JFrame {
         getContentPane().add(center, BorderLayout.CENTER);
         getContentPane().add(south, BorderLayout.SOUTH);
 
-
-
-//            numOfElements = Integer.parseInt(this.numOfElementsText.getText());
-//            numOfThreads = Integer.parseInt(this.numOfThreadsText.getText());
-//            numOfPasses = Integer.parseInt((this.numOfPassesText.getText()));
-
     }
 
-    private class MouseListener extends MouseAdapter{
-        @Override
-        public void mouseClicked(MouseEvent e) {
-            System.out.println(e.getX()+ "" + e.getY());
-            btnArray[e.getX()][e.getY()].setBackground(Color.black);
+    private JPanel centerPanel() {
+        center = new JPanel(new GridLayout(numOfElements,numOfElements));
+        btnArray = new JButton[numOfElements][numOfElements];
+        for (int i = 0; i < numOfElements; i++) {
+            for (int j = 0; j < numOfElements; j++) {
+                btnArray[i][j] = new JButton();
+                btnArray[i][j].addActionListener(controlPanel);
+                btnArray[i][j].setBackground(Color.white);
+                center.add(btnArray[i][j]);
+            }
         }
+        return center;
     }
+
     private class ControlListener implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent e) {
-            if(e.getSource()==btnArray){
-                myButton b = (myButton)e.getSource();
-                b.setBackground(Color.black);
-
+            if(e.getSource() == updateBtn)
+            {
+                try {
+                    numOfElements = Integer.parseInt(numOfElementsText.getText());
+                    numOfThreads = Integer.parseInt(numOfThreadsText.getText());
+                    numOfPasses = Integer.parseInt(numOfPassesText.getText());
+                }
+                catch (NumberFormatException ex){
+                    JOptionPane.showConfirmDialog(null,"Fields can't be blank.");
+                }
+                getContentPane().remove(center);
+                getContentPane().add(centerPanel(),BorderLayout.CENTER);
+                validate();
+            }
+            else if (e.getSource() == startBtn) {
+                ExecutorService ex = Executors.newFixedThreadPool(numOfThreads);
+                for (int i = 0; i < numOfThreads; i++) {
+                    ex.execute(new Cube(btnArray, numOfThreads, numOfElements, numOfPasses, i));
+                }
+                ex.shutdown();
+            } else if (e.getSource() == restartBtn) {
+                getContentPane().remove(center);
+                getContentPane().add(centerPanel(),BorderLayout.CENTER);
+                validate();
+            } else {
+                JButton btn = (JButton) e.getSource();
+                if (!(btn.getBackground() == Color.black))
+                    btn.setBackground(Color.black);
             }
         }
     }
