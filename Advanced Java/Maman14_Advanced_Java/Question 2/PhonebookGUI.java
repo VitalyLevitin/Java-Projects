@@ -30,6 +30,7 @@ public class PhonebookGUI extends JFrame {
     }
 
     private void initComponents() {
+<<<<<<< HEAD
         final DefaultTableModel model = new DefaultTableModel() {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -39,6 +40,10 @@ public class PhonebookGUI extends JFrame {
 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         table = new JTable(model);
+=======
+
+        //Creating the new objects to use.
+>>>>>>> aad646b56e1b3a40fa4ebaeb8b3c84fde5c6de65
         pane = new JScrollPane();
         addBtn = new JButton("Add");
         removeBtn = new JButton("Remove");
@@ -54,6 +59,17 @@ public class PhonebookGUI extends JFrame {
         phonebook = new Phonebook();
 
         //Initialize JTable.
+<<<<<<< HEAD
+=======
+        final DefaultTableModel model = new DefaultTableModel() {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        table = new JTable(model);
+>>>>>>> aad646b56e1b3a40fa4ebaeb8b3c84fde5c6de65
         model.addColumn("Name");
         model.addColumn("Number");
         pane.setViewportView(table);
@@ -68,7 +84,11 @@ public class PhonebookGUI extends JFrame {
         sortKeys.add(new RowSorter.SortKey(0, SortOrder.ASCENDING));
         sorter.setSortKeys(sortKeys);
 
+<<<<<<< HEAD
         //North.
+=======
+        //North part of the panel.
+>>>>>>> aad646b56e1b3a40fa4ebaeb8b3c84fde5c6de65
         north.add(nameString);
         north.add(nameText);
         phoneString = new JLabel("Phone:");
@@ -87,7 +107,7 @@ public class PhonebookGUI extends JFrame {
                 try {
                     Contact contact = new Contact(name, phone);
                     boolean action = phonebook.addContact(contact);
-                    if (action) {
+                    if (action) {//If we added the contact we update the JTable and reset text fields.
                         model.addRow(new Object[]{name, phone});
                         model.fireTableDataChanged();
                         nameText.setText(null);
@@ -109,7 +129,11 @@ public class PhonebookGUI extends JFrame {
                 String phone = phoneText.getText();
                 try {
                     Contact contact = new Contact(name, phone);
+<<<<<<< HEAD
                     int indexToRemove = removeRow(name);
+=======
+                    int indexToRemove = removeRow(name);//Getting the row to remove from the JTable.
+>>>>>>> aad646b56e1b3a40fa4ebaeb8b3c84fde5c6de65
                     phonebook.removeContact(contact);
                     if (indexToRemove != -1)
                         model.removeRow(indexToRemove);
@@ -128,6 +152,10 @@ public class PhonebookGUI extends JFrame {
                 try {
                     Contact contact = new Contact(name, phone);
                     if (phonebook.updateContact(contact, oldName)) {
+<<<<<<< HEAD
+=======
+                        //If we managed to update the phonebook we update the list.
+>>>>>>> aad646b56e1b3a40fa4ebaeb8b3c84fde5c6de65
                         table.setValueAt(name, table.getSelectedRow(), 0);
                         table.setValueAt(phone, table.getSelectedRow(), 1);
                         model.fireTableDataChanged();
@@ -140,6 +168,11 @@ public class PhonebookGUI extends JFrame {
                     JOptionPane.showMessageDialog(null, ex.getMessage());
                 } catch (AlreadyExistsContactException ex) {
                     JOptionPane.showMessageDialog(null, ex.getMessage());
+<<<<<<< HEAD
+=======
+                } catch (NameCantBeEmpty ex) {
+                    JOptionPane.showMessageDialog(null, ex.getMessage());
+>>>>>>> aad646b56e1b3a40fa4ebaeb8b3c84fde5c6de65
                 }
             }
         });
@@ -151,9 +184,16 @@ public class PhonebookGUI extends JFrame {
                 try {
                     Contact contact = new Contact(name, phone);
                     boolean status = phonebook.searchContact(contact);
+<<<<<<< HEAD
                     if (status) {
                         for (int i = 0; i < phonebook.size(); i++) {
                             if (name.compareTo(table.getValueAt(i, 0).toString()) == 0) {
+=======
+                    if (status) {//If we found the contact we highlight the contact's row.
+                        for (int i = 0; i < phonebook.size(); i++) {
+                            if (name.compareTo(table.getValueAt(i, 0).toString()) == 0 ||
+                                phone.compareTo(table.getValueAt(i,1).toString()) == 0) {
+>>>>>>> aad646b56e1b3a40fa4ebaeb8b3c84fde5c6de65
                                 table.setRowSelectionInterval(i, i);
                                 break;
                             }
@@ -164,6 +204,7 @@ public class PhonebookGUI extends JFrame {
                 }
             }
         });
+        //Getting the info from highlighted row into the text fields.
         table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
@@ -177,7 +218,11 @@ public class PhonebookGUI extends JFrame {
             }
         });
 
+<<<<<<< HEAD
         //Bottom part.
+=======
+        //Bottom part of the panel..
+>>>>>>> aad646b56e1b3a40fa4ebaeb8b3c84fde5c6de65
         loadBtn.addActionListener(new ActionListener() {
               @Override
               public void actionPerformed(ActionEvent e) {
@@ -235,35 +280,21 @@ public class PhonebookGUI extends JFrame {
         south.add(saveBtn);
 
         getContentPane().add(south, BorderLayout.PAGE_END);
+<<<<<<< HEAD
         pack();
     }
 
+=======
+        pack();//Auto resize.
+    }
+
+    //finding the Index of the row we want to remove from the JTable.
+>>>>>>> aad646b56e1b3a40fa4ebaeb8b3c84fde5c6de65
     private int removeRow(String name) {
         for (int i = 0; i < phonebook.size(); i++) {
             if (name.compareTo(table.getValueAt(i, 0).toString()) == 0)
                 return i;
         }
         return -1;
-    }
-
-    public static void main(String[] args) {
-        try {
-            for (UIManager.LookAndFeelInfo info :
-                    UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (UnsupportedLookAndFeelException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        new PhonebookGUI().setVisible(true);
     }
 }
