@@ -24,19 +24,14 @@ public class Phonebook implements Serializable {
         return contact;
     }
 
-<<<<<<< HEAD
-=======
     /**
      * This method removes all contacts from the phonebook.
      * (Needed when new file is loaded)
      */
->>>>>>> aad646b56e1b3a40fa4ebaeb8b3c84fde5c6de65
     public void removePhonebook(){
         contact.clear();
     }
 
-<<<<<<< HEAD
-=======
     /**
      * Adds a new contact.
      * @param details the contact to add.
@@ -44,7 +39,6 @@ public class Phonebook implements Serializable {
      * @throws AlreadyExistsContactException the contact already in the phonebook.
      * @throws IlegalPhoneNumberException number doesn't stand in the standard.
      */
->>>>>>> aad646b56e1b3a40fa4ebaeb8b3c84fde5c6de65
     public boolean addContact (Contact details) throws AlreadyExistsContactException, IlegalPhoneNumberException {
         if(contact.containsKey(details.getName())) {
             throw new AlreadyExistsContactException(details.getName() + " already exists");
@@ -58,15 +52,12 @@ public class Phonebook implements Serializable {
         }
     }
 
-<<<<<<< HEAD
-=======
     /**
      *This methods removes a contact from the phonebook.
      * (We only work by name since a few contacts can have the same number)
      * @param details the contact to remove.
      * @throws DoesNotExistContactException No contact under this name in our phonebook.
      */
->>>>>>> aad646b56e1b3a40fa4ebaeb8b3c84fde5c6de65
     public void removeContact(Contact details) throws DoesNotExistContactException {
         if(!contact.containsKey(details.getName()))
             throw new DoesNotExistContactException(details.getName() + " does not exists");
@@ -74,9 +65,6 @@ public class Phonebook implements Serializable {
             contact.remove(details.getName());
     }
 
-<<<<<<< HEAD
-    public boolean updateContact(Contact details, String oldName) throws DoesNotExistContactException, IlegalPhoneNumberException, AlreadyExistsContactException {
-=======
     /**
      * This methods receives a given contact and manipulates it's data as needed.
      * @param details the new details of the contact
@@ -88,28 +76,11 @@ public class Phonebook implements Serializable {
      * @throws NameCantBeEmpty Can't have a number without a name.
      */
     public boolean updateContact(Contact details, String oldName) throws DoesNotExistContactException, IlegalPhoneNumberException, AlreadyExistsContactException, NameCantBeEmpty {
->>>>>>> aad646b56e1b3a40fa4ebaeb8b3c84fde5c6de65
         if(!myMap().containsKey(oldName)){
             throw new DoesNotExistContactException(details.getName() + " does not exists");
             }
         if(!details.isNumber(details.getNumber()))
             throw new IlegalPhoneNumberException("Phone number must contain 10 digits");
-<<<<<<< HEAD
-        removeContact(new Contact(oldName, myMap().get(oldName).getNumber()));
-        boolean status = addContact(new Contact(details.getName(), details.getNumber()));
-        return status;
-        }
-
-    public boolean searchContact(Contact details) throws DoesNotExistContactException {
-        if(details.getName().compareTo("")==0 ||!myMap().containsKey(details.getName())){
-            throw new DoesNotExistContactException(details.getName() + " does not exists");
-        }
-        else if(!myMap().containsValue(details.getNumber())){
-            throw new DoesNotExistContactException(details.getNumber() + " does not exists");
-        }
-        return true;
-    }
-=======
         if(details.getName().length()==0)
             throw new NameCantBeEmpty("Name String can't be empty.");
         //Trying to add the contact, if successful we remove the old contact.
@@ -138,7 +109,6 @@ public class Phonebook implements Serializable {
      * Returns the size of the phonebook.
      * @return size of the phonebook.
      */
->>>>>>> aad646b56e1b3a40fa4ebaeb8b3c84fde5c6de65
     public int size(){return contact.size();}
 
 }
